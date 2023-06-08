@@ -12,13 +12,28 @@ mongoose.connect(`mongodb+srv://books:book@cluster0.2mbcfzq.mongodb.net/books?re
 .catch((err) => console.error(err))
 
 //Routes
-app.use("/books" , require("./routes/bookRoutes.js"))
+app.use("/fiction" , require("./routes/fictionRouter.js"))
+app.use("/nonfiction" , require("./routes/nonfictionRouter.js"))
+app.use("/fantasy" , require("./routes/fantasyRouter.js"))
+app.use("/bestselling" , require("./routes/bestsellingRouter.js"))
+app.use("/newrelease" , require("./routes/newreleaseRouter.js"))
+app.use("/cart", require("./routes/cartRouter.js"));
 
 //Error Handler
 app.use((err, req, res, next) => {
     console.log(err)
     return res.send({errMsg: err.message})
 })
+
+app.get('/api/books', async (req, res, next) => {
+    try {
+      const books = await BestSelling.find();
+      res.json(books);
+    } catch (error) {
+      console.error('Error fetching books:', error);
+      next(error); // Pass the error to the error handler middleware
+    }
+  });
 
 //Server
 app.listen(9000, () => {

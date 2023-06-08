@@ -1,0 +1,35 @@
+.book-container {
+  width: 200px; /* Adjust the width to your desired size */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.book-container img {
+  width: 100%;
+  height: auto;
+}
+
+
+.book-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.book-author {
+  font-size: 14px;
+}
+
+.book-description {
+  font-size: 14px;
+}
+
+.book-price {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.book-image {
+  width: 100%;
+  height: auto;
+}
