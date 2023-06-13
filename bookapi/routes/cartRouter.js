@@ -4,6 +4,11 @@ const cartRouter = express.Router();
 // In-memory storage for the cart items
 let cartItems = [];
 
+// Get all items in the cart
+cartRouter.get("/", (req, res) => {
+  res.status(200).json({ cartItems });
+});
+
 // Add item to cart
 cartRouter.post("/", (req, res) => {
   const { itemId } = req.body; // Assuming the request body contains the item ID to add

@@ -20,14 +20,9 @@ const Fantasy = () => {
       <h2>Fantasy</h2>
       {fantasyBooks.map((book) => (
         <Book
-          key={book._id}
-          name={book.name}
-          author={book.author}
-          description={book.description}
-          oldPrice={book.old_price}
-          newPrice={book.new_price}
-          imgUrl={book.imgUrl}
-        />
+        key={book._id}
+        book={book}
+      />
       ))}
     </div>
   );

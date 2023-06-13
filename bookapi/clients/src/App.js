@@ -10,7 +10,7 @@ import Fiction from './components/Fiction';
 import Fantasy from './components/Fantasy';
 import Footer from './components/Footer';
 import Cart from './components/Cart';
-import Book from './components/Book'; // Import the Book component
+import Book from './components/Book'; 
 
 import './App.css';
 

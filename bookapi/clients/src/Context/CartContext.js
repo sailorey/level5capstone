@@ -1,80 +1,38 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState } from 'react';
+import axios from "axios"
 
 export const CartContext = createContext();
 
-export function CartProvider({ children }) {
-  const [cartProducts, setCartProducts] = useState([]);
-
-  function getProductQuantity(id) {
-    const quantity = cartProducts.find((product) => product.id === id)?.quantity;
-
-    if (quantity === undefined) {
-      return 0;
-    }
-
-    return quantity;
+export const CartProvider = ({ children }) => {
+  const [cartItems, setCartItems] = useState([]);
+  const [cartQuantity, setCartQuantity] = useState(null)
+  
+  function getCart() {
+    axios.get("/cart")
+    // .then(res => console.log(res.data.cartItems[0].quantity, "get cart"))
+    .then(res => setCartQuantity(res.data.cartItems[0].quantity))
   }
 
-  function addOneToCart(id) {
-    console.log(id, "id")
-    const quantity = getProductQuantity(id);
-
-    if (quantity === 0) {
-      setCartProducts([...cartProducts, { id: id, quantity: 1 }]);
-    } else {
-      setCartProducts(
-        cartProducts.map((product) =>
-          product.id === id
-            ? { ...product, quantity: product.quantity + 1 }
-            : product
-        )
-      );
-    }
+  function addToCart(item){
+    axios.post("/cart", item)
+    .then(res => console.log(res, "add to cart"))
+    setCartItems((prevItems) => [...prevItems, item]);
+    getCart()
   }
 
-  function removeOneFromCart(id) {
-    const quantity = getProductQuantity(id);
+  console.log(cartItems, "cart items")
 
-    if (quantity === 1) {
-      deleteFromCart(id);
-    } else {
-      setCartProducts(
-        cartProducts.map((product) =>
-          product.id === id
-            ? { ...product, quantity: product.quantity - 1 }
-            : product
-        )
-      );
-    }
-  }
-
-  function deleteFromCart(id) {
-    setCartProducts((cartProducts) =>
-      cartProducts.filter((currentProduct) => currentProduct.id !== id)
-    );
-  }
-
-  function clearCart() {
-    setCartProducts([]);
-  }
-  function test() {
-    console.log(test)
-  }
-
-  const contextValue = {
-    items: cartProducts,
-    getProductQuantity,
-    addOneToCart,
-    removeOneFromCart,
-    deleteFromCart,
-    clearCart,
-    test
+  const removeFromCart = (itemId) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
 
   return (
-    <CartContext.Provider value={contextValue}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart, getCart, cartQuantity }}>
       {children}
     </CartContext.Provider>
   );
-}
+};
