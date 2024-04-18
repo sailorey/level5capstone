@@ -1,33 +1,19 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
 
-//Books Blueprint
-const fantasySchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-      },
-      author: {
-        type: String,
-      },
-      description: {
-        type: String,
-      },
-      old_price: {
-        type: Number,
-      },
-      new_price: {
-        type: Number,
-      },
-      imgUrl: {
-        type: String,
-      },
-      quantity: {
-        type: Number,
-        default: 0,
-      },
-    }, {
-      timestamps: true,
-    });
+const fantasySchema = new mongoose.Schema({
+  name: String,
+  author: String,
+  description: String,
+  old_price: Number,
+  new_price: Number,
+  imgUrl: String,
+  quantitiy: Number,
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
 
-module.exports = mongoose.model("fantasy", fantasySchema)
+const Fantasy = mongoose.model('Fantasy', fantasySchema);
+
+module.exports = Fantasy
+
+

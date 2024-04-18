@@ -1,76 +1,37 @@
-const express = require("express")
-const bestsellingRouter = express.Router()
-const Bestselling = require ('../models/bestselling.js')
+const express = require("express");
+const Bestselling = require('../models/bestselling');
+const bestsellingRouter = express.Router();
 
-
-// Get All Bestselling
-bestsellingRouter.get("/", async (req, res, next) => {
-    try {
-      const bestsellings = await Bestselling.find();
-      return res.status(200).send(bestsellings);
-    } catch (err) {
-      res.status(500);
-      return next(err);
-    }
+// Get all bestselling books
+bestsellingRouter.get("/", async (req, res) => {
+  try {
+    const bestsellings = await Bestselling.find();
+    res.status(200).json(bestsellings);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching bestselling books", error: err });
+  }
 });
 
-// Get Bestselling ID
-bestsellingRouter.get("/:bestsellingId", async (req, res, next) => {
-    try {
-        const bestselling = await Bestselling.findOne({_id: req.params.bestsellingId});
-        if (!bestselling) {
-        return res.status(404).send(`Bestselling with ID ${req.params.bestsellingId} not found.`);
-        }
-        return res.status(200).send(bestselling);
-    } catch (err) {
-        res.status(500);
-        return next(err);
-    }
-    });
+// Create a new bestselling book
+bestsellingRouter.post("/", async (req, res) => {
+  try {
+    const newBestselling = new Bestselling(req.body);
+    const savedBestselling = await newBestselling.save();
+    res.status(201).json(savedBestselling);
+  } catch (err) {
+    res.status(500).json({ message: "Error creating new bestselling book", error: err });
+  }
+});
 
-// Post One
-bestsellingRouter.post("/", async (req, res, next) => {
-    console.log(req.body)
-    try {
-      const newBestselling = new Bestselling(req.body);
-      const savedBestselling = await newBestselling.save();
-      return res.status(201).send(savedBestselling);
-    } catch (err) {
-        res.status(500);
-      return next(err);
-    }
-  });
-  
-  //delete one
-  bestsellingRouter.delete("/:bestsellingId", async (req, res, next) => {
-    try {
-      const deletedBestselling = await Bestselling.findOneAndDelete({_id: req.params.bestsellingId});
-      if (!deletedBestselling) {
-        return res.status(404).send(`Bestselling with ID ${req.params.bestsellingId} not found.`);
-      }
-      return res.status(200).send(`Successfully deleted ${deletedBestselling.title} from the database.`);
-    } catch (err) {
-      res.status(500);
-      return next(err);
-    }
-  });
-
-//update one
-bestsellingRouter.put("/:bestsellingId", async (req, res, next) => {
-    try {
-        const bestselling = await Bestselling.findOneAndUpdate({ _id: req.params.bestsellingId }, 
-            req.body, 
-            { new: true }
-            )
-            return res.status(200).send(bestselling)
-    } catch (err) {
-        res.status(500);
-        return next(err);
-    }
-})
-;
+bestsellingRouter.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedBestselling = await Bestselling.findByIdAndUpdate(id, req.body, { new: true });
+    res.status(200).json(updatedBestselling);
+  } catch (err) {
+    res.status(500).json({ message: "Error updating bestselling book", error: err });
+  }
+});
 
 
-
-
-module.exports = bestsellingRouter
+module.exports = bestsellingRouter;

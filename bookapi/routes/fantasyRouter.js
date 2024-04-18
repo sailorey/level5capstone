@@ -1,76 +1,39 @@
-const express = require("express")
-const fantasyRouter = express.Router()
-const Fantasy = require ('../models/fantasy.js')
+const express = require("express");
+const Fantasy = require('../models/fantasy');
+const fantasyRouter = express.Router();
 
-
-// Get All fantasy
-fantasyRouter.get("/", async (req, res, next) => {
-    try {
-      const fantasys = await Fantasy.find();
-      return res.status(200).send(fantasys);
-    } catch (err) {
-      res.status(500);
-      return next(err);
-    }
+// Get all fantasy books
+fantasyRouter.get("/", async (req, res) => {
+  try {
+    const fantasys = await Fantasy.find();
+    res.status(200).json(fantasys);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching fantasy books", error: err });
+  }
 });
 
-// Get fantasy ID
-fantasyRouter.get("/:fantasyId", async (req, res, next) => {
-    try {
-        const fantasy = await Fantasy.findOne({_id: req.params.fantasyId});
-        if (!fantasy) {
-        return res.status(404).send(`Fantasy with ID ${req.params.fantasyId} not found.`);
-        }
-        return res.status(200).send(fantasy);
-    } catch (err) {
-        res.status(500);
-        return next(err);
-    }
-    });
+// Create a new fantasy book
+// POST /fantasy
+fantasyRouter.post("/", async (req, res) => {
+  try {
+    const newFantasy = await Fantasy.create(req.body); // Assuming you're using Mongoose's `create` method
 
-// Post One
-fantasyRouter.post("/", async (req, res, next) => {
-    console.log(req.body)
-    try {
-      const newFantasy = new Fantasy(req.body);
-      const savedFantasy = await newFantasy.save();
-      return res.status(201).send(savedFantasy);
-    } catch (err) {
-        res.status(500);
-      return next(err);
-    }
-  });
-  
-  //delete one
-  fantasyRouter.delete("/:fantasyId", async (req, res, next) => {
-    try {
-      const deletedFantasy = await Fantasy.findOneAndDelete({_id: req.params.fantasyId});
-      if (!deletedFantasy) {
-        return res.status(404).send(`Fantasy with ID ${req.params.fantasyId} not found.`);
-      }
-      return res.status(200).send(`Successfully deleted ${deletedFantasy.title} from the database.`);
-    } catch (err) {
-      res.status(500);
-      return next(err);
-    }
-  });
+    res.status(201).json(newFantasy); // Return the newly created fantasy book
+  } catch (err) {
+    console.error("Error creating new fantasy book:", err); // Log the error for debugging purposes
+    res.status(500).json({ message: "Error creating new fantasy book", error: err.message }); // Include error message in response
+  }
+});
 
-//update one
-fantasyRouter.put("/:fantasyId", async (req, res, next) => {
-    try {
-        const fantasy = await Fantasy.findOneAndUpdate({ _id: req.params.fantasyId }, 
-            req.body, 
-            { new: true }
-            )
-            return res.status(200).send(fantasy)
-    } catch (err) {
-        res.status(500);
-        return next(err);
-    }
-})
-;
+fantasyRouter.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedFantasy = await Fantasy.findByIdAndUpdate(id, req.body, { new: true });
+    res.status(200).json(updatedFantasy);
+  } catch (err) {
+    res.status(500).json({ message: "Error updating fantasy book", error: err });
+  }
+});
 
+module.exports = fantasyRouter;
 
-
-
-module.exports = fantasyRouter

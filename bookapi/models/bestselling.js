@@ -1,33 +1,18 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-// Books Blueprint
-const bestsellingSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  author: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-  old_price: {
-    type: Number,
-  },
-  new_price: {
-    type: Number,
-  },
-  imgUrl: {
-    type: String,
-  },
-  quantity: {
-    type: Number,
-    default: 0,
-  },
-}, {
-  timestamps: true,
+const bestsellingSchema = new mongoose.Schema({
+
+  name: String,
+  author: String,
+  description: String,
+  old_price: Number,
+  new_price: Number,
+  imgUrl: String,
+  quantity: Number,
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('bestselling', bestsellingSchema);
+const Bestselling = mongoose.model('Bestselling', bestsellingSchema);
+
+module.exports = Bestselling;

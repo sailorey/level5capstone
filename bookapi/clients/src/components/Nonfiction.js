@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Book from './Book';
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
 
-const NonFiction = () => {
-  const [nonFictionBooks, setNonFictionBooks] = useState([]);
 
-  useEffect(() => {
-    axios.get('/nonfiction')
-      .then((response) => {
-        setNonFictionBooks(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching non-fiction books:', error);
-      });
-  }, []);
+// const NonFiction = () => {
+//   const [nonFictionBooks, setNonFictionBooks] = useState([]);
 
-  return (
-    <div>
-      <h2>Non-Fiction</h2>
-      {nonFictionBooks.map((book) => (
-        <Book
-        key={book._id}
-        book={book}
-      />
-      ))}
-    </div>
-  );
-};
+//   useEffect(() => {
+//     axios.get('/nonfiction')
+//       .then((response) => {
+//         setNonFictionBooks(response.data);
+//       })
+//       .catch((error) => {
+//         console.error('Error fetching non-fiction books:', error);
+//       });
+//   }, []);
 
-export default NonFiction;
+//   return (
+//     <div>
+//       <h2>Non-Fiction</h2>
+//       {nonFictionBooks.map((book) => (
+//         <Book
+//         key={book._id}
+//         book={book}
+//       />
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default NonFiction;
