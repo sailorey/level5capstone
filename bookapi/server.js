@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
+require("dotenv").config()
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use('/newrelease', newreleaseRouter);
 app.use('/cart', cartRouter);
 
 // Connect to MongoDB
-mongoose.connect(`mongodb+srv://books:book@cluster0.2mbcfzq.mongodb.net/books`)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to database"))
   .catch((err) => console.error(err));
 
